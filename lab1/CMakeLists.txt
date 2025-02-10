@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 3.23)
-project(lab1)
+
+set(project "lab1")
+project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(lab1 main.cpp)
+set(${project}_SOURCES
+        main.cpp)
 
-IF (NOT WIN32)
-target_link_libraries(lab1 m)
-ENDIF()
+add_subdirectory(newmath)
+add_subdirectory(ConsoleController)
+
+set(${project}_SOURCE_LIST
+        ${${project}_SOURCES})
+
+add_executable(${project}
+        ${${project}_SOURCE_LIST})
+
+target_link_libraries(${project} newmath)
+target_link_libraries(${project} ConsoleController)
