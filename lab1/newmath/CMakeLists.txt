@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
 set(project "newmath")
-project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
