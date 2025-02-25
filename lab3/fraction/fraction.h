@@ -17,8 +17,6 @@ class fraction {
     fraction(int w, int n, int d);
     fraction(double value);
     fraction(const char* s);
-    fraction(const fraction& f);
-    ~fraction();
 
     void SetNumerator(int n);
     void SetDenominator(int d);
@@ -29,7 +27,7 @@ class fraction {
     int GetWhole() const;
     bool GetNegative() const;
 
-    fraction operator=(const fraction& other);
+    fraction& operator=(const fraction& other);
 
     fraction& operator+=(const fraction& other);
     fraction& operator-=(const fraction& other);

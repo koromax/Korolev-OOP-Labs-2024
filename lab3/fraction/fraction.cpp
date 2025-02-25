@@ -9,7 +9,7 @@ fraction::fraction() {
 }
 
 fraction::fraction(int n, int d) : numerator(n), denominator(d) {
-    if (d == 0 && n != 0) {
+    if (d == 0) {
         std::cout << "Denominator cannot be zero. Assuming 1." << '\n';
         denominator = 1;
     }
@@ -22,7 +22,7 @@ fraction::fraction(int w) : whole(w) {
 }
 
 fraction::fraction(int w, int n, int d) : whole(w), numerator(n), denominator(d) {
-    if (d == 0 && n != 0) {
+    if (d == 0) {
         std::cout << "Denominator cannot be zero. Assuming 1." << '\n';
         denominator = 1;
     }
@@ -82,15 +82,11 @@ fraction::fraction(const char* s) {
         }
     }
 
-    normalize();
-}
+    if (GetDenominator() == 0) {
+        exit(1);
+    }
 
-fraction::fraction(const fraction& other)
-    : whole(other.whole), numerator(other.numerator), denominator(other.denominator), isNegative(other.isNegative) {
     normalize();
-}
-
-fraction::~fraction() {
 }
 
 void fraction::SetNumerator(int n) {
@@ -98,11 +94,6 @@ void fraction::SetNumerator(int n) {
 }
 
 void fraction::SetDenominator(int d) {
-    if (d == 0 && numerator != 0) {
-        std::cout << "Denominator cannot be zero." << '\n';
-        return;
-    }
-
     denominator = d;
 }
 
@@ -126,7 +117,7 @@ bool fraction::GetNegative() const {
     return isNegative;
 }
 
-fraction fraction::operator=(const fraction& other) {
+fraction& fraction::operator=(const fraction& other) {
     if (this == &other) {
         return *this;
     }
