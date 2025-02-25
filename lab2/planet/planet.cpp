@@ -37,6 +37,7 @@ void planet::setName(char* n) {
     delete[] name;
     name = new char[std::strlen(n) + 1];
     std::memcpy(name, n, std::strlen(n));
+    name[std::strlen(n) + 1] = '\0';
 }
 
 void planet::setDiameter(unsigned int i) {
@@ -123,5 +124,4 @@ std::ofstream& operator<<(std::ofstream& out, planet& p) {
     out << p.getName() << ' ' << p.getDiameter() << ' ' << p.getContainsLife() << ' ' << p.getSatelliteCount() << '\n';
     return out;
 }
-
 }  // namespace planet
