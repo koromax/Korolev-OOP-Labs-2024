@@ -17,6 +17,8 @@ class fraction {
     fraction(int w, int n, int d);
     fraction(double value);
     fraction(const char* s);
+    fraction(const fraction& f);
+    ~fraction();
 
     void SetNumerator(int n);
     void SetDenominator(int d);
@@ -42,8 +44,8 @@ class fraction {
     void reciprocate();
 
     double toDouble() const;
-    fraction improperForm();
-    fraction normalize();
+    fraction& improperForm();
+    fraction& normalize();
 };
 
 std::istream& operator>>(std::istream& is, fraction& fr);

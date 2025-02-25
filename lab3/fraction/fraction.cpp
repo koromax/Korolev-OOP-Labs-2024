@@ -85,6 +85,14 @@ fraction::fraction(const char* s) {
     normalize();
 }
 
+fraction::fraction(const fraction& other)
+    : whole(other.whole), numerator(other.numerator), denominator(other.denominator), isNegative(other.isNegative) {
+    normalize();
+}
+
+fraction::~fraction() {
+}
+
 void fraction::SetNumerator(int n) {
     numerator = n;
 }
@@ -139,7 +147,7 @@ fraction& fraction::operator+=(const fraction& other) {
     }
 
     if (this->denominator == other.denominator) {
-        this->numerator = other.numerator;
+        this->numerator += other.numerator;
         this->whole += other.whole;
         this->normalize();
         return *this;
@@ -271,13 +279,13 @@ double fraction::toDouble() const {
     return (whole * denominator + numerator) / static_cast<double>(denominator);
 }
 
-fraction fraction::improperForm() {
+fraction& fraction::improperForm() {
     this->numerator += this->whole * this->denominator;
     this->whole = 0;
     return *this;
 }
 
-fraction fraction::normalize() {
+fraction& fraction::normalize() {
     if (whole < 0) {
         isNegative = !isNegative;
         whole = std::abs(whole);
