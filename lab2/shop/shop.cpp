@@ -13,23 +13,28 @@ shop::shop(char* name, char* type, double area, bool isLocal) : area(area), isLo
     setType(type);
 }
 
+shop::shop(const shop& o) : area(o.area), isLocal(o.isLocal) {
+    setName(o.name);
+    setName(o.type);
+}
+
 shop::~shop() {
     // delete[] name;
 }
 
-char* shop::getName() {
+char* shop::getName() const {
     return name;
 }
 
-char* shop::getType() {
+char* shop::getType() const {
     return type;
 }
 
-double shop::getArea() {
+double shop::getArea() const {
     return area;
 }
 
-bool shop::getLocal() {
+bool shop::getLocal() const {
     return isLocal;
 }
 

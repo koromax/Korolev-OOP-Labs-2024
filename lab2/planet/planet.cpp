@@ -13,23 +13,27 @@ planet::planet(char* n, unsigned int diameter, bool life, unsigned int satellite
     setName(n);
 }
 
+planet::planet(const planet& o) : diameter(o.diameter), containsLife(o.containsLife), satelliteCount(o.satelliteCount) {
+    setName(o.name);
+}
+
 planet::~planet() {
     // delete[] name;
 }
 
-char* planet::getName() {
+char* planet::getName() const {
     return name;
 }
 
-unsigned int planet::getDiameter() {
+unsigned int planet::getDiameter() const {
     return diameter;
 }
 
-bool planet::getContainsLife() {
+bool planet::getContainsLife() const {
     return containsLife;
 }
 
-unsigned int planet::getSatelliteCount() {
+unsigned int planet::getSatelliteCount() const {
     return satelliteCount;
 }
 
@@ -120,7 +124,7 @@ std::ifstream& operator>>(std::ifstream& in, planet& p) {
     return in;
 }
 
-std::ofstream& operator<<(std::ofstream& out, planet& p) {
+std::ofstream& operator<<(std::ofstream& out, const planet& p) {
     out << p.getName() << ' ' << p.getDiameter() << ' ' << p.getContainsLife() << ' ' << p.getSatelliteCount() << '\n';
     return out;
 }

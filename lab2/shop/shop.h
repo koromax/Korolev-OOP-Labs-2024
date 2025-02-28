@@ -8,12 +8,13 @@ class shop {
  public:
     shop();
     shop(char* name, char* type, double area, bool isLocal);
+    shop(const shop& o);
     ~shop();
 
-    char* getName();
-    char* getType();
-    double getArea();
-    bool getLocal();
+    char* getName() const;
+    char* getType() const;
+    double getArea() const;
+    bool getLocal() const;
 
     void setName(char* n);
     void setType(char* t);
@@ -22,10 +23,10 @@ class shop {
 
     void print();
 
+    shop& operator=(const shop& p);
     friend bool operator==(const shop& lhs, const shop& rhs);
     friend bool operator!=(const shop& lhs, const shop& rhs);
     friend bool operator<(const shop& lhs, const shop& rhs);
-    shop& operator=(const shop& p);
 
  private:
     char* name = nullptr;
@@ -37,5 +38,5 @@ class shop {
 std::istream& operator>>(std::istream& in, shop& p);
 
 std::ifstream& operator>>(std::ifstream& in, shop& p);
-std::ofstream& operator<<(std::ofstream& out, shop& p);
+std::ofstream& operator<<(std::ofstream& out, const shop& p);
 }  // namespace shop
