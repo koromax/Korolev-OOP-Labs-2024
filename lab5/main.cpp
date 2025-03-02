@@ -61,6 +61,14 @@ void check_set() {
     std::cout << A + B << "\n";
     std::cout << A - B << "\n";
     std::cout << A * B << "\n";
+
+    std::cout << A << ' ' << B << '\n';
+    A == B ? std::cout << "A == B" << '\n' : std::cout << "A != B" << '\n';
+    A = B;
+    std::cout << A << ' ' << B << '\n';
+    A == B ? std::cout << "A == B" << '\n' : std::cout << "A != B" << '\n';
+    A.delete_element(2);
+    std::cout << A << ' ' << B << '\n';
 }
 
 void interactive() {
@@ -74,7 +82,7 @@ void interactive() {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    // check_set();
+    check_set();
     // check();
     // interactive();
     // return 0;

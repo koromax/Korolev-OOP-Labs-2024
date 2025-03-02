@@ -57,7 +57,7 @@ bool MySet<INF>::operator==(MySet& s) const {
     }
 
     for (int i = 0; i < this->size; ++i) {
-        if (this->pdata[i] != s.pdata[i]) {
+        if (*this->pdata[i] != *s.pdata[i]) {
             return false;
         }
     }
@@ -75,7 +75,7 @@ void MySet<INF>::add_element(INF el) {
 
 template<class INF>
 void MySet<INF>::delete_element(INF el) {
-    int L = 0;
+    int L = -1;
     int R = this->size;
 
     int m = 0;
