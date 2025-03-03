@@ -14,6 +14,7 @@ class MyVector {
     int size = 0;
     INF** pdata;
     void resize();
+    const int compareItems(INF i, INF j) const;
 
  public:
     MyVector();
@@ -24,9 +25,9 @@ class MyVector {
     bool delete_element(int i);
     INF operator[](int i) const;
     void sort();
-    int get_size() const { return size; }
-    int get_capacity() const { return capacity; }
-    int find(INF el) const;
+    const int get_size() const { return size; }
+    const int get_capacity() const { return capacity; }
+    const int find(INF el) const;
     MyVector& operator=(const MyVector& v);
 
     template<class T>
@@ -34,7 +35,7 @@ class MyVector {
 };
 
 template<>
-void MyVector<char*>::resize();
+const int MyVector<char*>::compareItems(char* i, char* j) const;
 
 template<class INF>
 void MyVector<INF>::resize() {
@@ -54,14 +55,23 @@ void MyVector<INF>::resize() {
     pdata = temp;
 }
 
+template<class INF>
+const int MyVector<INF>::compareItems(INF i, INF j) const {
+    if (i > j) {
+        return 1;
+    } else if (i == j) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 template<>
 MyVector<char*>::MyVector(char* el);
 template<>
 MyVector<char*>::MyVector(const MyVector& v);
 template<>
 void MyVector<char*>::add_element(char* el);
-template<>
-void MyVector<char*>::sort();
 
 template<class INF>
 MyVector<INF>::MyVector() : size(0), capacity(defaultCapacity) {
@@ -124,7 +134,7 @@ template<class INF>
 void MyVector<INF>::sort() {
     for (int i = 0; i < size - 1; ++i) {
         for (int j = i + 1; j < size; ++j) {
-            if (*pdata[i] > *pdata[j]) {
+            if (compareItems(*pdata[i], *pdata[j]) > 0) {
                 INF* temp = pdata[i];
                 pdata[i] = pdata[j];
                 pdata[j] = temp;
@@ -134,11 +144,26 @@ void MyVector<INF>::sort() {
 }
 
 template<class INF>
-int MyVector<INF>::find(INF el) const {
-    for (int i = 0; i < size; ++i) {
-        if (*pdata[i] == el) {
-            return i;
+const int MyVector<INF>::find(INF el) const {
+    if (size == 0) {
+        return -1;
+    }
+
+    int L = -1;
+    int R = this->size;
+
+    int m = 0;
+    while (R - L > 1) {
+        m = L + (R - L) / 2;
+        if (compareItems(*this->pdata[m], el) > 0) {
+            R = m;
+        } else {
+            L = m;
         }
+    }
+
+    if (L == -1 || compareItems(*this->pdata[L], el) == 0) {
+        return L;
     }
     return -1;
 }

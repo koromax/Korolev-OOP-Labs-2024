@@ -38,15 +38,6 @@ class MySet : public MyVector<INF> {
     }
 };
 
-template<>
-bool MySet<char*>::operator==(MySet& s) const;
-template<>
-void MySet<char*>::add_element(char* el);
-template<>
-void MySet<char*>::delete_element(char* el);
-template<>
-bool MySet<char*>::is_element(char* el) const;
-
 template<class INF>
 bool MySet<INF>::operator==(MySet& s) const {
     if (this == &s) {
@@ -57,7 +48,7 @@ bool MySet<INF>::operator==(MySet& s) const {
     }
 
     for (int i = 0; i < this->size; ++i) {
-        if (*this->pdata[i] != *s.pdata[i]) {
+        if (this->compareItems(*this->pdata[i], *s.pdata[i]) != 0) {
             return false;
         }
     }
@@ -75,23 +66,10 @@ void MySet<INF>::add_element(INF el) {
 
 template<class INF>
 void MySet<INF>::delete_element(INF el) {
-    int L = -1;
-    int R = this->size;
-
-    int m = 0;
-    while (R - L > 1) {
-        m = L + (R - L) / 2;
-        if (*this->pdata[m] > el) {
-            R = m;
-        } else {
-            L = m;
-        }
-    }
-
-    if (*this->pdata[m] != el) {
+    int m = this->find(el);
+    if (m == -1) {
         return;
     }
-
     this->MyVector<INF>::delete_element(m);
 }
 
