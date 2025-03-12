@@ -73,5 +73,23 @@ void chars() {
 }
 
 int main() {
+    std::cout << "chars()" << '\n';
     chars();
+    std::cout << "task()" << '\n';
+    task();
+
+    // operator= check
+    MyStack<int> st;
+    st.push(1);
+    st.push(2);
+    st.push(3);
+    st.push(4);
+    MyStack<int> st_copy;
+    st_copy.push(100);
+    st_copy = st;
+    st.push(5);
+    st_copy.push(6);
+    std::cout << "st: " << st << '\n' << "st_copy: " << st_copy << '\n';
+
+    return 0;
 }

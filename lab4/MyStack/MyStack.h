@@ -28,6 +28,9 @@ class MyStack {
     void push(INF n);     // добавить узел в вершину стека
     void pop();           // удалить узел из вершины стека
     INF top_inf();        // считать информацию из вершины стека
+
+    MyStack& operator=(const MyStack& o);
+
     friend std::ostream& operator<<(std::ostream& os, const MyStack<INF>& st) {
         Node* p = st.top;
         while (p->next != nullptr) {
@@ -95,4 +98,32 @@ INF MyStack<INF>::top_inf() {
         throw std::runtime_error("Stack is empty");
     }
     return top->d;
+}
+
+template<class INF>
+MyStack<INF>& MyStack<INF>::operator=(const MyStack<INF>& o) {
+    if (this == &o) {
+        return *this;
+    }
+
+    while (!this->empty()) {
+        this->pop();
+    }
+
+    MyStack<INF> temp;
+    Node* oo = o.top;
+    while (oo->next != nullptr) {
+        temp.push(oo->d);
+        oo = oo->next;
+    }
+    temp.push(oo->d);
+
+    Node* to = temp.top;
+    while (to->next != nullptr) {
+        this->push(to->d);
+        to = to->next;
+    }
+    this->push(to->d);
+
+    return *this;
 }
