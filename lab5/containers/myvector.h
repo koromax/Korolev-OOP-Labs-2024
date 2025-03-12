@@ -71,6 +71,8 @@ MyVector<char*>::MyVector(char* el);
 template<>
 MyVector<char*>::MyVector(const MyVector& v);
 template<>
+MyVector<char*>::~MyVector();
+template<>
 void MyVector<char*>::add_element(char* el);
 
 template<class INF>

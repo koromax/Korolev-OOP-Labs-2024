@@ -27,6 +27,15 @@ MyVector<char*>::MyVector(const MyVector& v) : size(v.size), capacity(v.capacity
 }
 
 template<>
+MyVector<char*>::~MyVector() {
+    for (int i = 0; i < size; ++i) {
+        delete[] *pdata[i];
+        delete pdata[i];
+    }
+    delete[] pdata;
+}
+
+template<>
 void MyVector<char*>::add_element(char* el) {
     if (size >= capacity) {
         resize();
