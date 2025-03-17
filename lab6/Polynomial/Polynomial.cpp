@@ -42,6 +42,9 @@ Term::Term(const char* s) {
                         if (std::strcmp(s, "-x") == 0) {
                             SetCoefficient(-1);
                             SetDegree(1);
+                        } else if (std::strcmp(s, "x") == 0) {
+                            SetCoefficient(1);
+                            SetDegree(1);
                         } else {
                             std::cerr << "Invalid term format" << std::endl;
                         }
@@ -167,7 +170,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
             os << "-";
         }
 
-        if (firstTerm || std::abs(term.GetCoeficcient()) != 1 || term.GetDegree() == 0) {
+        if (std::abs(term.GetCoeficcient()) != 1 || term.GetDegree() == 0) {
             os << std::abs(term.GetCoeficcient());
         }
 
