@@ -1,10 +1,15 @@
 cmake_minimum_required(VERSION 3.23)
-project(lab8)
+
+set(project "lab8")
+project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(lab8 main.cpp)
+set(${project}_SOURCES
+        main.cpp)
 
-IF (NOT WIN32)
-target_link_libraries(lab8 m)
-ENDIF()
+set(${project}_SOURCE_LIST
+        ${${project}_SOURCES})
+
+add_executable(${project}
+        ${${project}_SOURCE_LIST})
