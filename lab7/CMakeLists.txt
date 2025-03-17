@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.23)
-project(lab7)
+
+set(project "lab7")
+project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(lab7 main.cpp)
+set(${project}_SOURCES
+        main.cpp)
 
-IF (NOT WIN32)
-target_link_libraries(lab7 m)
-ENDIF()
+add_subdirectory(Animal)
+
+set(${project}_SOURCE_LIST
+        ${${project}_SOURCES})
+
+add_executable(${project}
+        ${${project}_SOURCE_LIST})
+
+target_link_libraries(${project} Animal)
