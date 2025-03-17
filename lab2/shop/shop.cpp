@@ -15,11 +15,12 @@ shop::shop(char* name, char* type, double area, bool isLocal) : area(area), isLo
 
 shop::shop(const shop& o) : area(o.area), isLocal(o.isLocal) {
     setName(o.name);
-    setName(o.type);
+    setType(o.type);
 }
 
 shop::~shop() {
-    // delete[] name;
+    delete[] name;
+    delete[] type;
 }
 
 char* shop::getName() const {
@@ -97,38 +98,38 @@ bool operator<(const shop& lhs, const shop& rhs) {
     return std::strcmp(lhs.name, rhs.name) < 0;
 }
 
-std::istream& operator>>(std::istream& in, shop& p) {
+std::istream& operator>>(std::istream& in, shop& s) {
     char name[kBufferSize];
     char type[kBufferSize];
     double area;
     bool isLocal;
 
     in >> name >> type >> area >> isLocal;
-    p.setName(name);
-    p.setType(type);
-    p.setArea(area);
-    p.setLocal(isLocal == 1);
+    s.setName(name);
+    s.setType(type);
+    s.setArea(area);
+    s.setLocal(isLocal == 1);
 
     return in;
 }
 
-std::ifstream& operator>>(std::ifstream& in, shop& p) {
+std::ifstream& operator>>(std::ifstream& in, shop& s) {
     char name[kBufferSize];
     char type[kBufferSize];
     double area;
     bool isLocal;
 
     in >> name >> type >> area >> isLocal;
-    p.setName(name);
-    p.setType(type);
-    p.setArea(area);
-    p.setLocal(isLocal == 1);
+    s.setName(name);
+    s.setType(type);
+    s.setArea(area);
+    s.setLocal(isLocal == 1);
 
     return in;
 }
 
-std::ofstream& operator<<(std::ofstream& out, shop& p) {
-    out << p.getName() << ' ' << p.getType() << ' ' << p.getArea() << ' ' << p.getLocal() << '\n';
+std::ofstream& operator<<(std::ofstream& out, const shop& s) {
+    out << s.getName() << ' ' << s.getType() << ' ' << s.getArea() << ' ' << s.getLocal() << '\n';
     return out;
 }
 

@@ -18,7 +18,7 @@ planet::planet(const planet& o) : diameter(o.diameter), containsLife(o.containsL
 }
 
 planet::~planet() {
-    // delete[] name;
+    delete[] name;
 }
 
 char* planet::getName() const {

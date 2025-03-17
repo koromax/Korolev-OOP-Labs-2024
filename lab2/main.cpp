@@ -72,7 +72,7 @@ shop::shop ReadShopFromStdin() {
 }
 
 template<typename T>
-void Add(array<T>& s, T e) {
+void Add(array<T>& s, const T e) {
     if (s.size == s.capacity) {
         increaseArray(s);
     }
@@ -86,6 +86,8 @@ void Add(array<T>& s, T e) {
     }
     s.array[i] = e;
     ++s.size;
+
+    std::cout << "Succesfully added an entry." << '\n';
 }
 
 template<typename T>
@@ -107,6 +109,7 @@ void Remove(array<T>& s, T e) {
     }
 
     --s.size;
+    std::cout << "Succesfully removed the entry." << '\n';
 }
 
 void Edit(array<planet::planet>& s) {
@@ -156,6 +159,8 @@ void Edit(array<planet::planet>& s) {
                 break;
         }
     }
+
+    std::cout << "Succesfully edited planet." << '\n';
 }
 
 void Edit(array<shop::shop>& s) {
@@ -205,6 +210,7 @@ void Edit(array<shop::shop>& s) {
                 break;
         }
     }
+    std::cout << "Succesfully shop planet." << '\n';
 }
 
 template<typename T>
