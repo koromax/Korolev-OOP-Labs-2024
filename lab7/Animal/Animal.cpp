@@ -1,6 +1,7 @@
 #include "Animal.h"
 
 #include <cstring>
+#include <iomanip>
 #include <iostream>
 
 void Animal::increaseZoo() {
@@ -16,8 +17,28 @@ void Animal::increaseZoo() {
 }
 
 void Animal::SetName(const char* n) {
+    if (name != nullptr) {
+        delete[] name;
+    }
     name = new char[std::strlen(n) + 1];
     std::strncpy(name, n, std::strlen(n) + 1);
+}
+
+Animal::Animal(const char* n, int a) : age(a) {
+    SetName(n);
+    std::cout << "Animal()" << std::endl;
+}
+
+Animal::Animal(const Animal& a) : age(a.age) {
+    SetName(a.name);
+    std::cout << "Animal()" << std::endl;
+}
+
+Animal& Animal::operator=(const Animal& o) {
+    SetName(o.name);
+    age = o.age;
+
+    return *this;
 }
 
 void Animal::AddAnimal() {
@@ -29,15 +50,18 @@ void Animal::AddAnimal() {
 }
 
 void Mammal::show() const {
-    std::cout << "Mammal info: " << name << ", " << age << ", " << (hasFur ? "yesFur" : "noFur") << '\n';
+    std::cout << std::right << std::setw(19) << "Mammal info: " << std::left << std::setw(20) << name << ", " << std::setw(3) << age << ", "
+              << std::setw(6) << (hasFur ? "yesFur" : "noFur") << '\n';
 }
 
 void Bird::show() const {
-    std::cout << "Bird info: " << name << ", " << age << ", " << wingSpan << '\n';
+    std::cout << std::right << std::setw(19) << "Bird info: " << std::left << std::setw(20) << name << ", " << std::setw(3) << age << ", "
+              << std::setw(6) << wingSpan << '\n';
 }
 
 void Artiodactyl::show() const {
-    std::cout << "Artiodactyl info: " << name << ", " << age << ", " << (hasFur ? "yesFur" : "noFur") << ", ";
+    std::cout << std::right << std::setw(19) << "Artiodactyl info: " << std::left << std::setw(20) << name << ", " << std::setw(3) << age << ", "
+              << std::setw(6) << (hasFur ? "yesFur" : "noFur") << ", ";
     if (hoofCount != 0) {
         std::cout << hoofCount << '\n';
     } else {

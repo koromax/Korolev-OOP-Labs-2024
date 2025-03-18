@@ -6,7 +6,7 @@
 
 class Animal {
  protected:
-    char* name;
+    char* name = nullptr;
     int age = 0;
 
     void increaseZoo();
@@ -16,22 +16,16 @@ class Animal {
     static Animal** zoo;
     static int zooSize;
     static int zooCapacity;
+    void AddAnimal();
 
-    Animal(const char* n, int a = 0) : age(a) {
-        SetName(n);
-        std::cout << "Animal()" << std::endl;
-    };
-    Animal(const Animal& a) : age(a.age) {
-        SetName(a.name);
-        std::cout << "Animal()" << std::endl;
-    };
+    Animal(const char* n, int a = 0);
+    Animal(const Animal& a);
     virtual ~Animal() {
         delete[] name;
         std::cout << "~Animal()" << std::endl;
     }
 
-    void AddAnimal();
-
+    Animal& operator=(const Animal& o);
     virtual void show() const = 0;
 };
 
