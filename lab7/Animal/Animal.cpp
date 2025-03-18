@@ -20,12 +20,13 @@ void Animal::SetName(const char* n) {
     std::strncpy(name, n, std::strlen(n) + 1);
 }
 
-// void Animal::AddAnimal() {
-//     if (zooSize == zooCapacity) {
-//         increaseZoo();
-//     }
-//     zoo[zooSize] =
-// }
+void Animal::AddAnimal() {
+    if (zooSize == zooCapacity) {
+        increaseZoo();
+    }
+    zoo[zooSize] = this;
+    zooSize++;
+}
 
 void Mammal::show() const {
     std::cout << "Mammal info: " << name << ", " << age << ", " << (hasFur ? "yesFur" : "noFur") << '\n';
@@ -45,4 +46,5 @@ void Artiodactyl::show() const {
 }
 
 int Animal::zooSize = 0;
-Animal:
+int Animal::zooCapacity = 8;
+Animal** Animal::zoo = new Animal*[Animal::zooCapacity];

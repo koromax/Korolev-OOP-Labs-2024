@@ -2,30 +2,38 @@
 
 #include "Animal/Animal.h"
 
-void print(Animal::zoo v) {
+void print(Animal** zoo) {
     for (int i = 0; i < Animal::zooSize; ++i) {
-        (*v[i]).show();
+        (*zoo[i]).show();
     }
 }
 
-void clear(Animal::zoo v) {
-    for (int i = Animal::zooSize - 1; i >= 0; --i) {
-        v.delete_element(i);
+void deleteElem(Animal** zoo, int i = 0) {
+    delete (zoo[i]);
+    while (i < Animal::zooSize) {
+        zoo[i] = zoo[i + 1];
+        ++i;
+    }
+    Animal::zooSize--;
+}
+
+void clear(Animal** zoo) {
+    while (Animal::zooSize > 0) {
+        deleteElem(zoo);
     }
 }
 
 int main() {
-    Animal* zoo;
     Mammal m("test", 0);
-    zoo.add_element(&m);
+    m.AddAnimal();
     Bird b("UFO", 100, 25.5);
-    zoo.add_element(&b);
+    b.AddAnimal();
     Artiodactyl a1("drunk drivers", 46, true, 2);
     Artiodactyl a2("killer whales", 240, false, 0);
-    zoo.add_element(&a1);
-    zoo.add_element(&a2);
+    a1.AddAnimal();
+    a2.AddAnimal();
 
-    print(zoo);
+    print(Animal::zoo);
 
     return 0;
 }

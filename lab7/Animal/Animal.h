@@ -9,13 +9,14 @@ class Animal {
     char* name;
     int age = 0;
 
+    void increaseZoo();
+    void SetName(const char* n);
+
+ public:
     static Animal** zoo;
     static int zooSize;
     static int zooCapacity;
 
-    void increaseZoo();
-
- public:
     Animal(const char* n, int a = 0) : age(a) {
         SetName(n);
         std::cout << "Animal()" << std::endl;
@@ -28,8 +29,6 @@ class Animal {
         delete[] name;
         std::cout << "~Animal()" << std::endl;
     }
-
-    void SetName(const char* n);
 
     void AddAnimal();
 
