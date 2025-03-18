@@ -50,3 +50,4 @@
 *cmake-build-debug
 *main.dSYM
 *debug
+*.txt
