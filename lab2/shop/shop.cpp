@@ -42,14 +42,14 @@ bool shop::getLocal() const {
 void shop::setName(char* n) {
     delete[] name;
     name = new char[std::strlen(n) + 1];
-    std::memcpy(name, n, std::strlen(n));
+    std::memcpy(name, n, std::strlen(n) + 1);
     name[std::strlen(n)] = '\0';
 }
 
 void shop::setType(char* t) {
     delete[] type;
     type = new char[std::strlen(t) + 1];
-    std::memcpy(type, t, std::strlen(t));
+    std::memcpy(type, t, std::strlen(t) + 1);
     name[std::strlen(t)] = '\0';
 }
 
