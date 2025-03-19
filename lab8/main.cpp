@@ -40,7 +40,7 @@ void Task3() {
     std::ifstream in("lab8/3A.txt", std::ios::in);
     std::ofstream out("lab8/3B.txt", std::ios::out | std::ios::trunc);
     if (!in.is_open() || !out.is_open()) {
-        std::cout << "At least one file has failed to open." << '\n';
+        std::cout << "Some file has failed to open." << '\n';
         return;
     }
 
@@ -115,6 +115,11 @@ class Complex {
     double real = 0.;
     double imaginary = 0.;
     Complex(double r = 0., double i = 0.) : real(r), imaginary(i) {}
+    Complex& operator+=(const Complex& o) {
+        this->real += o.real;
+        this->imaginary += o.imaginary;
+        return *this;
+    }
 };
 void Task5() {
     /* 4. Составить описание класса Complex для представления комплексных чисел с возможностью задания вещественной и мнимой частей числами типа
@@ -134,8 +139,7 @@ void Task5() {
             std::cout << " - ";
         }
         std::cout << "i * " << std::abs(e.imaginary) << '\n';
-        result.real += e.real;
-        result.imaginary += e.imaginary;
+        result += e;
     }
     std::cout << '\n';
     std::cout << "sum = " << result.real;
@@ -217,7 +221,6 @@ void rectPrint(std::list<Rectangle>& l) {
     for (iter = l.begin(); iter != l.end(); iter++) {
         std::cout << std::setw(5) << (*iter).a << ' ' << std::setw(5) << (*iter).b << "    = " << std::setw(10) << (*iter).a * (*iter).b << '\n';
     }
-    std::cout << '\n';
 }
 void Task7() {
     std::cout << std::left;
@@ -225,19 +228,12 @@ void Task7() {
     0.7), (7.2, 0.8), (5.3, 3.0), (4.9, 6.6), (9.3, 0.2).
     Вывести список на экран таким образом, чтобы размеры каждого прямоугольника выводились в отдельной строке. Выведите на экран размеры
     прямоугольника, у которого наибольшая площадь. Напишите функцию вывода списка на экран. */
-    Rectangle biggest = Rectangle(0., 0.);
     std::list<Rectangle> l = {Rectangle(1.2, 6.3), Rectangle(4.0, 0.7), Rectangle(7.2, 0.8),
                               Rectangle(5.3, 3.0), Rectangle(4.9, 6.6), Rectangle(9.3, 0.2)};
-    std::list<Rectangle>::iterator iter;
-    for (iter = l.begin(); iter != l.end(); iter++) {
-        std::cout << std::setw(5) << (*iter).a << ' ' << std::setw(5) << (*iter).b << "    = " << std::setw(10) << (*iter).a * (*iter).b << '\n';
-
-        if (biggest < *iter) {
-            biggest = *iter;
-        }
-    }
+    rectPrint(l);
     std::cout << '\n';
-    std::cout << std::setw(5) << biggest.a << ' ' << std::setw(5) << biggest.b << "    = " << std::setw(10) << biggest.a * biggest.b << '\n';
+    std::list<Rectangle>::iterator biggest = std::max_element(l.begin(), l.end());
+    std::cout << std::setw(5) << biggest->a << ' ' << std::setw(5) << biggest->b << "    = " << std::setw(10) << biggest->a * biggest->b << '\n';
 }
 
 void mapPrint(std::map<std::string, int> m) {
@@ -298,21 +294,14 @@ void Task9() {
         return;
     }
 
-    bool isNumberDeleted = false;
-    while (!isNumberDeleted) {
-        std::cout << "Enter phone number to be deleted: ";
-        std::getline(std::cin, phone);
-        for (auto& [key, value] : phoneBook) {
-            if (value == phone) {
-                phoneBook.erase(key);
-                isNumberDeleted = true;
-                break;
-            }
-        }
-        if (!isNumberDeleted) {
-            std::cout << "No such number has been found. ";
-        }
+    std::cout << "Enter name to be deleted: ";
+    std::getline(std::cin, name);
+    while (phoneBook.find(name) == phoneBook.end()) {
+        std::cout << "No such name has been found. ";
+        std::cout << "Enter name to be deleted: ";
+        std::getline(std::cin, name);
     }
+    phoneBook.erase(name);
 
     std::cout << '\n';
     printPhoneBook(phoneBook);
