@@ -26,11 +26,13 @@ void Animal::SetName(const char* n) {
 
 Animal::Animal(const char* n, int a) : age(a) {
     SetName(n);
+    AddAnimal();
     std::cout << "Animal()" << std::endl;
 }
 
 Animal::Animal(const Animal& a) : age(a.age) {
     SetName(a.name);
+    AddAnimal();
     std::cout << "Animal()" << std::endl;
 }
 
