@@ -35,8 +35,7 @@ class shop {
     bool isLocal = true;
 };
 
-std::istream& operator>>(std::istream& in, shop& s);
-
-std::ifstream& operator>>(std::ifstream& in, shop& s);
+template<typename stream>
+stream& operator>>(stream& in, shop& s);
 std::ofstream& operator<<(std::ofstream& out, const shop& s);
 }  // namespace shop

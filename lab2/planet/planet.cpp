@@ -5,8 +5,7 @@
 const int kBufferSize = 128;
 
 namespace planet {
-planet::planet() : name(), diameter(), containsLife(), satelliteCount() {
-}
+planet::planet() = default;
 
 planet::planet(char* n, unsigned int diameter, bool life, unsigned int satelliteCount)
     : diameter(diameter), containsLife(life), satelliteCount(satelliteCount) {
@@ -57,8 +56,10 @@ void planet::setSatelliteCount(unsigned int i) {
 }
 
 void planet::print() {
-    std::cout << "Planet: " << name << ", Diameter: " << diameter << ", Contains Life: " << containsLife << ", Satellite Count: " << satelliteCount
-              << '\n';
+    std::cout << std::left << "Name: " << std::setw(10) << name;
+    std::cout << ", Diameter: " << std::right << std::setw(6) << diameter;
+    std::cout << ", Contains Life: " << std::setw(1) << containsLife;
+    std::cout << ", Satellite Count: " << std::setw(2) << satelliteCount << '\n';
 }
 
 planet& planet::operator=(const planet& p) {
@@ -94,26 +95,12 @@ bool operator<(const planet& lhs, const planet& rhs) {
     return std::strcmp(lhs.name, rhs.name) < 0;
 }
 
-std::istream& operator>>(std::istream& in, planet& p) {
+template<typename stream>
+stream& operator>>(stream& in, planet& p) {
     char name[kBufferSize];
-    unsigned int diameter;
-    bool life;
-    unsigned int satelliteCount;
-
-    in >> name >> diameter >> life >> satelliteCount;
-    p.setName(name);
-    p.setDiameter(diameter);
-    p.setLife(life == 1);
-    p.setSatelliteCount(satelliteCount);
-
-    return in;
-}
-
-std::ifstream& operator>>(std::ifstream& in, planet& p) {
-    char name[kBufferSize];
-    unsigned int diameter;
-    bool life;
-    unsigned int satelliteCount;
+    unsigned int diameter = 0;
+    bool life = false;
+    unsigned int satelliteCount = 0;
 
     in >> name >> diameter >> life >> satelliteCount;
     p.setName(name);
@@ -128,4 +115,7 @@ std::ofstream& operator<<(std::ofstream& out, const planet& p) {
     out << p.getName() << ' ' << p.getDiameter() << ' ' << p.getContainsLife() << ' ' << p.getSatelliteCount() << '\n';
     return out;
 }
+
+template std::istream& operator>>(std::istream& in, planet& p);
+template std::ifstream& operator>>(std::ifstream& in, planet& p);
 }  // namespace planet

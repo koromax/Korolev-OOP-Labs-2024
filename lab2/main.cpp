@@ -65,7 +65,7 @@ planet::planet ReadPlanetFromStdin() {
 }
 
 shop::shop ReadShopFromStdin() {
-    std::cout << "Enter shop name, type, area and if it's local[1 - True] : ";
+    std::cout << "Enter shop name, type, area and if it's local[0/1] : ";
     shop::shop s;
     std::cin >> s;
     return s;
@@ -87,29 +87,32 @@ void Add(array<T>& s, const T e) {
     s.array[i] = e;
     ++s.size;
 
-    std::cout << "Succesfully added an entry." << '\n';
+    std::cout << "Successfully added an entry." << '\n';
 }
 
 template<typename T>
-void Remove(array<T>& s, T e) {
-    int i = 0;
-    while (i < s.size && s.array[i] != e) {
-        ++i;
-    }
-
-    if (i == s.size) {
-        std::cout << "Failed to find the item" << '\n';
+void Remove(array<T>& s, int i) {
+    if (i > s.size || i <= 0) {
+        std::cout << "Index is out of range" << '\n';
         return;
     }
 
-    ++i;
+    --i;
+    --s.size;
     while (i < s.size) {
-        s.array[i - 1] = s.array[i];
+        s.array[i] = s.array[i + 1];
         ++i;
     }
 
-    --s.size;
-    std::cout << "Succesfully removed the entry." << '\n';
+    std::cout << "Successfully removed the entry." << '\n';
+}
+
+template<typename T>
+void Clear(array<T>& s) {
+    while (s.size > 0) {
+        Remove(s, s.size);
+        std::cout << "\033[A" << "\33[2K\r";  // suppressing Remove() message
+    }
 }
 
 void Edit(array<planet::planet>& s) {
@@ -160,7 +163,7 @@ void Edit(array<planet::planet>& s) {
         }
     }
 
-    std::cout << "Succesfully edited planet." << '\n';
+    std::cout << "Successfully edited planet." << '\n';
 }
 
 void Edit(array<shop::shop>& s) {
@@ -195,7 +198,7 @@ void Edit(array<shop::shop>& s) {
                 s.array[selectedItem].setType(type);
                 break;
             case 3:
-                bool area;
+                double area;
                 std::cout << "Enter shop's area: ";
                 std::cin >> area;
                 s.array[selectedItem].setArea(area);
@@ -210,7 +213,7 @@ void Edit(array<shop::shop>& s) {
                 break;
         }
     }
-    std::cout << "Succesfully shop planet." << '\n';
+    std::cout << "Successfully shop planet." << '\n';
 }
 
 template<typename T>
@@ -229,11 +232,12 @@ void LoadFromFile(array<T>& s, const char* fileName) {
         for (int i = 0; i < length; ++i) {
             fileIn >> e;
             Add(s, e);
+            std::cout << "\033[A" << "\33[2K\r";  // suppressing Add() message
         }
     }
 
     fileIn.close();
-    std::cout << "Succesfully loaded from file." << '\n';
+    std::cout << "Successfully loaded from file." << '\n';
 }
 
 template<typename T>
@@ -249,7 +253,7 @@ void WriteIntoFile(array<T>& s, const char* fileName) {
         fileOut << s.array[i];
     }
     fileOut.close();
-    std::cout << "Succesfully wrote into file." << '\n';
+    std::cout << "Successfully wrote into file." << '\n';
 }
 }  // namespace
 
@@ -264,17 +268,20 @@ void RunPlanet() {
                 Add(planets, ReadPlanetFromStdin());
                 break;
             case 2:
-                Remove(planets, ReadPlanetFromStdin());
+                std::cout << "Enter planet's number: ";
+                Remove(planets, ReadSelectionFromStdin());
                 break;
             case 3:
                 Edit(planets);
                 break;
             case 4:
                 for (int i = 0; i < planets.size; ++i) {
+                    std::cout << i + 1 << ". ";
                     planets.array[i].print();
                 }
                 break;
             case 5:
+                Clear(planets);
                 LoadFromFile(planets, "lab2/SolarSystem.txt");
                 break;
             case 6:
@@ -289,7 +296,7 @@ void RunPlanet() {
 void RunVariant() {
     array<shop::shop> shops;
     LoadFromFile(shops, "lab2/Shops.txt");
-
+    std::cout.clear();
     while (true) {
         PrintShopMenu();
         switch (ReadSelectionFromStdin()) {
@@ -297,17 +304,20 @@ void RunVariant() {
                 Add(shops, ReadShopFromStdin());
                 break;
             case 2:
-                Remove(shops, ReadShopFromStdin());
+                std::cout << "Enter shop's number: ";
+                Remove(shops, ReadSelectionFromStdin());
                 break;
             case 3:
                 Edit(shops);
                 break;
             case 4:
                 for (int i = 0; i < shops.size; ++i) {
+                    std::cout << i + 1 << ". ";
                     shops.array[i].print();
                 }
                 break;
             case 5:
+                Clear(shops);
                 LoadFromFile(shops, "lab2/Shops.txt");
                 break;
             case 6:

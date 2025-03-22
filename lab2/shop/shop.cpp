@@ -1,12 +1,12 @@
 #include "shop.h"
 
 #include <cstring>
+#include <iomanip>
 
 const int kBufferSize = 128;
 
 namespace shop {
-shop::shop() : name(), type(), area(), isLocal() {
-}
+shop::shop() = default;
 
 shop::shop(char* name, char* type, double area, bool isLocal) : area(area), isLocal(isLocal) {
     setName(name);
@@ -50,7 +50,7 @@ void shop::setType(char* t) {
     delete[] type;
     type = new char[std::strlen(t) + 1];
     std::memcpy(type, t, std::strlen(t) + 1);
-    name[std::strlen(t)] = '\0';
+    type[std::strlen(t)] = '\0';
 }
 
 void shop::setArea(double a) {
@@ -62,7 +62,10 @@ void shop::setLocal(bool l) {
 }
 
 void shop::print() {
-    std::cout << "Shop name: " << name << ", Type: " << type << ", Area: " << area << ", Is Local: " << isLocal << '\n';
+    std::cout << std::left << "Shop name: " << std::setw(15) << name;
+    std::cout << ", Type: " << std::setw(15) << type;
+    std::cout << std::right << ", Area: " << std::setw(8) << area;
+    std::cout << ", Is Local: " << std::setw(2) << isLocal << '\n';
 }
 
 shop& shop::operator=(const shop& p) {
@@ -98,22 +101,8 @@ bool operator<(const shop& lhs, const shop& rhs) {
     return std::strcmp(lhs.name, rhs.name) < 0;
 }
 
-std::istream& operator>>(std::istream& in, shop& s) {
-    char name[kBufferSize];
-    char type[kBufferSize];
-    double area;
-    bool isLocal;
-
-    in >> name >> type >> area >> isLocal;
-    s.setName(name);
-    s.setType(type);
-    s.setArea(area);
-    s.setLocal(isLocal == 1);
-
-    return in;
-}
-
-std::ifstream& operator>>(std::ifstream& in, shop& s) {
+template<typename stream>
+stream& operator>>(stream& in, shop& s) {
     char name[kBufferSize];
     char type[kBufferSize];
     double area;
@@ -133,4 +122,6 @@ std::ofstream& operator<<(std::ofstream& out, const shop& s) {
     return out;
 }
 
+template std::istream& operator>>(std::istream& in, shop& s);
+template std::ifstream& operator>>(std::ifstream& in, shop& s);
 }  // namespace shop

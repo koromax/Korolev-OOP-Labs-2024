@@ -35,8 +35,7 @@ class planet {
     unsigned int satelliteCount = 0;
 };
 
-std::istream& operator>>(std::istream& in, planet& p);
-
-std::ifstream& operator>>(std::ifstream& in, planet& p);
+template<typename stream>
+stream& operator>>(stream& in, planet& p);
 std::ofstream& operator<<(std::ofstream& out, const planet& p);
 }  // namespace planet
