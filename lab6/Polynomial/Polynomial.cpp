@@ -6,52 +6,74 @@ Term::Term(const char* s) {
     std::strncpy(buffer, s, kBufferSize);
     buffer[kBufferSize - 1] = '\0';
 
-    if (buffer[0] == '+' && buffer[1] != 'x') {
-        buffer[0] = '0';
-    } else if (buffer[0] == '+' && buffer[1] == 'x') {
-        buffer[0] = '1';
+    /*
+
+    All possible forms of a Term
+
+    REPLACE '+' WITH
+          = '1' IF k = 1 ("+x^p" --> "1x^p")
+          = '0' IF k != 1 ("+kx^p" --> "0kx^p")
+
+    NO NEGATIVE EXPONENT
+
+    '-' --> remove character and *(-1) the coefficient at the end
+
+    k            = kx^0
+    x = x^p = kx = 1x^1
+        x^p      = 1x^p
+              kx = kx^1
+                   kx^p
+
+    */
+
+    bool isNegative = false;
+    if (std::strlen(buffer) > 1 && (buffer[0] == '+' || buffer[0] == '-')) {
+        if (buffer[0] == '-') {
+            isNegative = true;
+        }
+
+        if (buffer[1] == 'x') {
+            buffer[0] = '1';
+        } else {
+            buffer[0] = '0';
+        }
     }
+
     int c = 0;
     int d = 0;
 
+    if (std::strcmp(s, "x") == 0) {
+        coefficient = 1;
+        degree = 1;
+        return;
+    }
+
     int parsed = std::sscanf(buffer, "%dx^%d", &c, &d);
     if (parsed == 2) {
-        SetCoefficient(c);
-        SetDegree(d);
+        coefficient = c;
+        degree = d;
     } else {
-        parsed = std::sscanf(buffer, "%dx", &c);
-        if (parsed == 1 && std::find(buffer, buffer + kBufferSize, 'x') != buffer + kBufferSize) {
-            SetCoefficient(c);
-            SetDegree(1);
+        int parsed = std::sscanf(buffer, "x^%d", &d);
+        if (parsed == 1) {
+            coefficient = 1;
+            degree = d;
         } else {
-            parsed = std::sscanf(buffer, "-x^%d", &d);
+            int parsed = std::sscanf(buffer, "%d", &c);
             if (parsed == 1) {
-                SetCoefficient(-1);
-                SetDegree(d);
-            } else {
-                parsed = std::sscanf(buffer, "x^%d", &d);
-                if (parsed == 1) {
-                    SetCoefficient(1);
-                    SetDegree(d);
+                coefficient = c;
+                if (std::find(buffer, buffer + kBufferSize, 'x') != buffer + kBufferSize) {
+                    degree = 1;
                 } else {
-                    parsed = std::sscanf(buffer, "%d", &c);
-                    if (parsed == 1) {
-                        SetCoefficient(c);
-                        SetDegree(0);
-                    } else {
-                        if (std::strcmp(s, "-x") == 0) {
-                            SetCoefficient(-1);
-                            SetDegree(1);
-                        } else if (std::strcmp(s, "x") == 0) {
-                            SetCoefficient(1);
-                            SetDegree(1);
-                        } else {
-                            std::cerr << "Invalid term format" << std::endl;
-                        }
-                    }
+                    degree = 0;
                 }
+            } else {
+                std::cerr << "Invalid term format" << std::endl;
             }
         }
+    }
+
+    if (isNegative && coefficient != 0) {
+        coefficient *= -1;
     }
 }
 
@@ -98,11 +120,16 @@ std::istream& operator>>(std::istream& is, Term& t) {
 
 std::ostream& operator<<(std::ostream& os, const Term& t) {
     if (t.coefficient == 0) {
+        std::cout << 0;
         return os;
     }
 
-    if (t.coefficient != 1) {
-        os << t.coefficient;
+    if (t.coefficient < 0) {
+        std::cout << '-';
+    }
+
+    if (std::abs(t.coefficient) != 1 || t.degree == 0) {
+        os << std::abs(t.coefficient);
     }
 
     if (t.degree == 0) {
@@ -145,7 +172,7 @@ std::istream& operator>>(std::istream& is, Polynomial& p) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
-    if (p.size == 0) {
+    if (p.degree == 0 && p[0].GetCoefficient() == 0) {
         os << 0;
         return os;
     }
@@ -155,28 +182,28 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
     while (i >= 0 && i <= p.degree) {
         Term term = p[i];
 
-        if (term.GetCoeficcient() == 0) {
+        if (term.GetCoefficient() == 0) {
             !p.order_ ? i-- : i++;
             continue;
         }
 
         if (!firstTerm) {
-            if (term.GetCoeficcient() > 0) {
+            if (term.GetCoefficient() > 0) {
                 os << " + ";
             } else {
                 os << " - ";
             }
-        } else if (term.GetCoeficcient() < 0) {
+        } else if (term.GetCoefficient() < 0) {
             os << "-";
         }
 
-        if (std::abs(term.GetCoeficcient()) != 1 || term.GetDegree() == 0) {
-            os << std::abs(term.GetCoeficcient());
+        if (std::abs(term.GetCoefficient()) != 1 || term.GetDegree() == 0) {
+            os << std::abs(term.GetCoefficient());
         }
 
-        if (term.GetDegree() > 0) {
+        if (term.GetDegree() != 0) {
             os << 'x';
-            if (term.GetDegree() > 1) {
+            if (term.GetDegree() != 1) {
                 os << '^' << term.GetDegree();
             }
         }
@@ -194,8 +221,7 @@ Polynomial::Polynomial(const char* s) {
     std::strncpy(buffer, s, kBufferSize);
     buffer[kBufferSize - 1] = '\0';
 
-    // std::cout << buffer << '\n';
-
+    // removing all spaces
     int i = 0;
     int j = 0;
     int spaceCount = 0;
@@ -217,13 +243,11 @@ Polynomial::Polynomial(const char* s) {
         }
     }
 
-    // std::cout << buffer << '\n';
-
     int bufbufLength = 2 * std::strlen(buffer);
     char bufbuf[bufbufLength];
     std::strncpy(bufbuf, buffer, bufbufLength);
-    // std::cout << bufbuf << '\n';
 
+    // adding a space before '+' and '-'
     i = 1;
     j = bufbufLength - 1;
     while (i < bufbufLength && bufbuf[i] != '\0') {
@@ -239,12 +263,9 @@ Polynomial::Polynomial(const char* s) {
         i++;
     }
 
-    // std::cout << bufbuf << '\n';
-
     char delimiters[2] = " ";
     char* token = std::strtok(bufbuf, delimiters);
     while (token != NULL) {
-        // std::cout << "token:" << token << "|\n";
         this->AddTerm(Term(token));
         token = std::strtok(NULL, delimiters);
     }
@@ -258,8 +279,12 @@ void Polynomial::AddTerm(Term t) {
     }
     this->terms.add_element(t);
     size++;
-    if (t.GetDegree() > this->degree) {
+    if (t.GetDegree() > this->degree && t.GetCoefficient() != 0) {
         this->degree = t.GetDegree();
+    } else if ((*this)[this->degree].GetCoefficient() == 0) {
+        while (this->degree > 0 && (*this)[this->degree].GetCoefficient() != 0) {
+            this->degree--;
+        }
     }
     this->terms.sort();
 }
@@ -276,6 +301,7 @@ void Polynomial::Clear() {
         terms.delete_element(0);
         size--;
     }
+    this->degree = 0;
 }
 
 Polynomial& Polynomial::operator+=(const Polynomial& o) {
@@ -290,7 +316,6 @@ Polynomial& Polynomial::operator*=(const Polynomial& o) {
     this->Clear();
     for (int i = 0; i <= temp.degree; ++i) {
         for (int j = 0; j <= o.degree; ++j) {
-            // std::cout << temp[i] << " * " << o[j] << " = " << temp[i] * o[j] << '\n';
             this->AddTerm(temp[i] * o[j]);
         }
     }

@@ -18,7 +18,7 @@ class Term {
     Term(const Term& o) : coefficient(o.coefficient), degree(o.degree) {};
     Term(const char* s);
 
-    const int GetCoeficcient() const { return coefficient; }
+    const int GetCoefficient() const { return coefficient; }
     const int GetDegree() const { return degree; }
 
     Term& operator+=(const Term& o);
