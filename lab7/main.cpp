@@ -24,12 +24,7 @@ void deleteElem(int i = 0, Animal** zoo = Animal::zoo, int& zooSize = Animal::zo
     while (j < Animal::zooSize && Animal::zoo[j] != zoo[i]) {
         j++;
     }
-    if (j == Animal::zooSize) {
-        std::cerr << "somehow the animal has escaped the static zoo..." << '\n';
-        return;
-    }
 
-    (Animal::zoo[j])->~Animal();
     while (j < Animal::zooSize - 1) {
         Animal::zoo[j] = Animal::zoo[j + 1];
         ++j;
@@ -52,31 +47,36 @@ void clear(Animal** zoo = Animal::zoo, int& zooSize = Animal::zooSize) {
 }
 
 int main() {
-    Mammal* m = new Mammal("test", 0);
-    Bird* b = new Bird("UFO", 100, 25.5);
-    Artiodactyl* a1 = new Artiodactyl("drunk drivers", 46, true, 2);
-    Artiodactyl* a2 = new Artiodactyl("killer whales", 240, false, 0);
+    Mammal m("sphinx", 4500);
+    Bird b("government spy drones", 17, 25.5);
+    Artiodactyl a1("drunk drivers", 06, true, 2);
+    Artiodactyl a2("killer whales", 14, false, 0);
 
-    Animal* mas[3];
-    mas[0] = new Mammal("654", 9);
-    mas[1] = new Bird("jr", 20, 1.5);
-    mas[2] = new Artiodactyl("!!!", 942, true);
+    int myPetsAmount = 3;
+    Animal* myPets[myPetsAmount];
+    myPets[0] = new Mammal("Dog 🐕", 5);
+    myPets[1] = new Bird("Parrot 🦜", 1, .46);
+    myPets[2] = new Artiodactyl("Sheep 🐑", 7, true, 4);
     int masLength = 3;
-
-    print(mas, masLength);
-    std::cout << '\n';
-    deleteElem(2, mas, masLength);
-    print(mas, masLength);
-    std::cout << '\n';
-
-    clear(mas, masLength);
 
     print();
     std::cout << '\n';
+
+    deleteElem(2, myPets, myPetsAmount);
+    print();
+    std::cout << '\n';
+
+    deleteElem(2, myPets, myPetsAmount);
+    print(myPets, myPetsAmount);
+    std::cout << '\n';
+
     deleteElem(1);
     print();
     std::cout << '\n';
-    clear();
-    print();
+
+    for (int i = 0; i < myPetsAmount; ++i) {
+        delete myPets[i];
+    }
+    delete[] Animal::zoo;
     return 0;
 }
