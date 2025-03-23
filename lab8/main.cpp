@@ -120,6 +120,11 @@ class Complex {
         this->imaginary += o.imaginary;
         return *this;
     }
+    friend Complex operator+(const Complex& lhs, const Complex& rhs) {
+        Complex result = lhs;
+        result += rhs;
+        return result;
+    }
 };
 void Task5() {
     /* 4. Составить описание класса Complex для представления комплексных чисел с возможностью задания вещественной и мнимой частей числами типа
@@ -130,7 +135,6 @@ void Task5() {
     Сложите все числа (у комплексных чисел отдельно складываются действительные и мнимые части) и результирующее число выведите на экран. */
 
     std::vector<Complex> c = {Complex(-1.2, 6.3), Complex(4.1, 0.7), Complex(7.2, -0.8), Complex(5.3, 3.0), Complex(-4.9, 6.6), Complex(-9.3, 0.2)};
-    Complex result = Complex(0., 0.);
     for (auto e : c) {
         std::cout << e.real;
         if (e.imaginary >= 0) {
@@ -139,9 +143,10 @@ void Task5() {
             std::cout << " - ";
         }
         std::cout << "i * " << std::abs(e.imaginary) << '\n';
-        result += e;
     }
     std::cout << '\n';
+
+    Complex result = std::accumulate(c.begin(), c.end(), Complex(0.0, 0.0));
     std::cout << "sum = " << result.real;
     if (result.imaginary >= 0) {
         std::cout << " + ";
@@ -187,8 +192,7 @@ void Task6() {
     }
     std::cout << '\n';
     iter = l.begin();
-    iter++;
-    iter++;
+    std::advance(iter, 2);
     l.erase(iter);
     for (iter = l.begin(), i = 0; iter != l.end(); iter++, i++) {
         std::cout << *iter << ' ';
@@ -201,8 +205,7 @@ void Task6() {
     std::for_each(lCopy.begin(), lCopy.end(), doubleNumber);
     lPrint(lCopy);
     iter = lCopy.begin();
-    iter++;
-    iter++;
+    std::advance(iter, 2);
     lCopy.erase(iter);
     lPrint(lCopy);
 }
@@ -245,7 +248,6 @@ void Task8() {
     /* 4. Создайте отображение map<string, int> и занесите в него пары "one" - 100, "two" - 200, "three" - 300, ..., "six" - 600.
     Выведите содержимое отображения на экран. Удалить пары с ключами "five" и "six" и снова распечатайте отображение. */
     std::map<std::string, int> m = {};
-    std::map<std::string, int>::iterator i;
     m["one"] = 100;
     m["two"] = 200;
     m["three"] = 300;
@@ -264,9 +266,9 @@ void printPhoneBook(std::map<std::string, std::string> phoneBook) {
         std::cout << "Phone book doesn't contain any records :(" << '\n';
         return;
     }
-    std::cout << std::right << std::setw(18) << "Name" << " -- " << std::left << std::setw(18) << "Phone number" << '\n';
+    std::cout << std::right << std::setw(28) << "Name" << " -- " << std::left << std::setw(28) << "Phone number" << '\n';
     for (auto e : phoneBook) {
-        std::cout << std::right << std::setw(18) << e.first << " -- " << std::left << std::setw(18) << e.second << '\n';
+        std::cout << std::right << std::setw(28) << e.first << " -- " << std::left << std::setw(28) << e.second << '\n';
     }
 }
 void Task9() {
